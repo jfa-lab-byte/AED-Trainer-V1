@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#d92d35">
+<title>AED Trainer</title>
+<style>
+:root{
+  --red:#e43840;
+  --red-dark:#bd2029;
+  --green:#07984a;
+  --orange:#ff9918;
+  --black:#171717;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  margin:0;width:100%;height:100%;overflow:hidden;
+  background:#111;font-family:Arial,Helvetica,sans-serif;
+}
+body{touch-action:manipulation}
+.aed{
+  position:relative;width:100vw;height:100svh;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 28%,rgba(255,255,255,.10),transparent 27%),
+    linear-gradient(145deg,#ef444b 0%,var(--red) 46%,#ce2932 100%);
+  box-shadow:inset 0 0 0 3px rgba(0,0,0,.15);
+}
+.aed:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,.035),transparent 18%,transparent 82%,rgba(0,0,0,.05));
+}
+.brand{
+  position:absolute;top:5.5%;left:50%;transform:translateX(-50%);
+  font-size:clamp(15px,4vw,21px);font-weight:900;letter-spacing:3px;
+  color:rgba(255,255,255,.92);
+}
+.brand small{
+  display:block;text-align:center;font-size:.48em;letter-spacing:2px;margin-top:3px;
+  opacity:.72;
+}
+.power-wrap{
+  position:absolute;left:50%;top:29%;transform:translate(-50%,-50%);
+  width:min(42vw,190px);height:min(42vw,190px);
+  display:grid;place-items:center;
+}
+.power-ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:2px solid rgba(0,0,0,.30);
+  box-shadow:inset 0 0 0 5px rgba(255,255,255,.06),0 8px 22px rgba(0,0,0,.18);
+}
+#power{
+  position:relative;width:76%;height:76%;border-radius:50%;
+  border:4px solid #0b512e;background:linear-gradient(#0caf59,#078641);
+  box-shadow:inset 0 5px 5px rgba(255,255,255,.20),inset 0 -6px 8px rgba(0,0,0,.15),0 5px 10px rgba(0,0,0,.24);
+}
+#power:before{
+  content:"";position:absolute;left:50%;top:19%;transform:translateX(-50%);
+  width:10%;height:43%;background:white;border-radius:8px;z-index:2;
+}
+#power:after{
+  content:"";position:absolute;left:50%;top:31%;transform:translateX(-50%);
+  width:50%;height:50%;border:10px solid white;border-top-color:transparent;border-radius:50%;
+}
+#power.on{
+  filter:brightness(1.15);
+  box-shadow:0 0 0 8px rgba(255,255,255,.11),0 0 30px rgba(10,255,122,.28),inset 0 5px 5px rgba(255,255,255,.20);
+}
+.divider{
+  position:absolute;left:12%;right:12%;top:48%;height:2px;
+  background:rgba(255,255,255,.16);
+}
+.shock-wrap{
+  position:absolute;left:50%;bottom:9%;transform:translateX(-50%);
+  width:min(47vw,210px);height:min(42vw,190px);
+  display:grid;place-items:center;
+}
+.shock-label{
+  position:absolute;top:-28px;color:rgba(255,255,255,.68);
+  font-size:12px;font-weight:900;letter-spacing:2.2px;
+}
+#shock{
+  width:78%;height:78%;border:0;background:transparent;padding:0;opacity:.27;
+  filter:saturate(.6);transition:opacity .2s,filter .2s;
+}
+#shock svg{width:100%;height:100%;filter:drop-shadow(0 7px 8px rgba(0,0,0,.25))}
+#shock.ready{
+  opacity:1;filter:saturate(1);
+  animation:shockFlash .72s infinite;
+}
+@keyframes shockFlash{
+  0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(255,255,255,0))}
+  50%{transform:scale(1.055);filter:drop-shadow(0 0 20px rgba(255,255,255,.95))}
+}
+.led{
+  position:absolute;right:7%;top:5.8%;width:10px;height:10px;border-radius:50%;
+  background:#511;box-shadow:inset 0 1px 2px #000;
+}
+.led.on{background:#7cff8f;box-shadow:0 0 10px #7cff8f}
+.footer{
+  position:absolute;bottom:2.2%;left:5%;right:5%;text-align:center;
+  color:rgba(255,255,255,.47);font-size:9px;font-weight:800;letter-spacing:.8px;
+}
+</style>
+</head>
+<body>
+<main class="aed">
+  <div class="brand">AED <small>TRAINER</small></div>
+  <div id="led" class="led"></div>
+
+  <div class="power-wrap">
+    <div class="power-ring"></div>
+    <button id="power" aria-label="Power on"></button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="shock-wrap">
+    <div class="shock-label">SHOCK</div>
+    <button id="shock" disabled aria-label="Shock">
+      <svg viewBox="0 0 160 150" aria-hidden="true">
+        <path d="M80 4c-12 0-18 8-24 19L8 111c-6 12-1 22 12 27 39 15 81 15 120 0 13-5 18-15 12-27L104 23C98 12 92 4 80 4z" fill="#151515"/>
+        <path d="M80 9c-9 0-14 7-19 17L14 113c-4 8 0 14 9 18 37 14 77 14 114 0 9-4 13-10 9-18L99 26C94 16 89 9 80 9z" fill="#ff9918"/>
+        <path d="M69 47h27L81 78h23l-43 51 11-38H52z" fill="#fff"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="footer">TRAINING SIMULATION • NO REAL SHOCK IS DELIVERED</div>
+</main>
+
+<script>
+const AED={on:false,shockReady:false,run:0,metronome:null};
+const power=document.getElementById("power");
+const shock=document.getElementById("shock");
+const led=document.getElementById("led");
+let audioContext;
+
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+function audio(){
+  if(!audioContext){
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(C) audioContext=new C();
+  }
+  if(audioContext?.state==="suspended") audioContext.resume();
+  return audioContext;
+}
+function tone(freq=700,duration=.1,volume=.055){
+  const c=audio(); if(!c)return;
+  const o=c.createOscillator(),g=c.createGain();
+  o.frequency.value=freq;g.gain.value=volume;
+  o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);
+}
+function speak(text){
+  return new Promise(resolve=>{
+    if(!("speechSynthesis" in window)){resolve();return}
+    const u=new SpeechSynthesisUtterance(text);
+    u.rate=.76;u.pitch=.95;u.volume=1;
+    const voices=speechSynthesis.getVoices();
+    u.voice=voices.find(v=>/en-GB/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang))||null;
+    let finished=false;
+    const finish=()=>{if(finished)return;finished=true;clearTimeout(fallback);resolve()};
+    const estimated=Math.max(1500,text.split(/\s+/).length*650);
+    const fallback=setTimeout(finish,estimated+2500);
+    u.onend=finish;u.onerror=finish;speechSynthesis.speak(u);
+  });
+}
+async function voice(run,text){
+  if(run!==AED.run)return false;
+  await speak(text);
+  return run===AED.run;
+}
+async function start(){
+  if(AED.on)return;
+  audio(); AED.on=true; const run=++AED.run;
+  power.classList.add("on");led.classList.add("on");tone(650,.14);
+
+  if(!await voice(run,"Stay calm."))return;
+  await wait(1000); if(run!==AED.run)return;
+
+  if(!await voice(run,"Call for help."))return;
+  await wait(2000); if(run!==AED.run)return;
+
+  if(!await voice(run,"Remove clothing from patient's chest."))return;
+  await wait(2000); if(run!==AED.run)return;
+
+  if(!await voice(run,"Tear open package and remove pads. Apply pads to patient's bare chest."))return;
+  await wait(10000); if(run!==AED.run)return;
+
+  if(!await voice(run,"Analyzing heart rhythm. Do not touch patient. Stand clear."))return;
+  await wait(5000); if(run!==AED.run)return;
+
+  if(!await voice(run,"Shock advised. Charging."))return;
+
+  tone(520,.13);await wait(850);
+  tone(650,.13);await wait(850);
+  tone(780,.13);await wait(1300);
+  if(run!==AED.run)return;
+
+  // The button starts flashing as the AED tells the learner to press it.
+  AED.shockReady=true;
+  shock.disabled=false;
+  shock.classList.add("ready");
+  await voice(run,"Stand clear. Press flashing button now. Stand clear.");
+}
+async function deliverShock(){
+  if(!AED.on||!AED.shockReady)return;
+  const run=++AED.run;
+  AED.shockReady=false;shock.disabled=true;shock.classList.remove("ready");
+
+  tone(1150,.28,.08);
+  if(navigator.vibrate)navigator.vibrate([100,50,140]);
+
+  await wait(3000);
+  if(run!==AED.run)return;
+
+  if(!await voice(run,"Shock delivered. Start CPR."))return;
+  startMetronome(run);
+}
+function startMetronome(run){
+  if(run!==AED.run)return;
+  clearInterval(AED.metronome);
+  const interval=60000/110;
+  // Immediate first beat, then 110 BPM.
+  tone(760,.055,.05);
+  AED.metronome=setInterval(()=>{
+    if(run!==AED.run||!AED.on){clearInterval(AED.metronome);return}
+    tone(760,.055,.05);
+  },interval);
+}
+
+function powerOff(){
+  if(!AED.on)return;
+
+  // Invalidate any sequence currently waiting/running.
+  AED.run++;
+
+  AED.on=false;
+  AED.shockReady=false;
+
+  // Stop any current or queued voice prompt immediately.
+  if("speechSynthesis" in window){
+    speechSynthesis.cancel();
+  }
+
+  // Stop CPR metronome.
+  if(AED.metronome){
+    clearInterval(AED.metronome);
+    AED.metronome=null;
+  }
+
+  // Return controls to powered-off appearance.
+  shock.disabled=true;
+  shock.classList.remove("ready");
+  power.classList.remove("on");
+  led.classList.remove("on");
+
+  // Short power-down tone.
+  tone(430,.12,.045);
+}
+
+function togglePower(){
+  if(AED.on){
+    powerOff();
+  }else{
+    start();
+  }
+}
+
+power.addEventListener("click",togglePower);
+shock.addEventListener("click",deliverShock);
+</script>
+</body>
+</html>
